@@ -121,17 +121,17 @@ document.addEventListener('DOMContentLoaded', () => {
         availabilitySchedule = JSON.parse(storedSchedule);
         console.log('Schedule loaded from localStorage:', availabilitySchedule);
     } else {
-        // Fallback schedule if nothing in localStorage
+        // Fallback schedule with YOUR EXACT times
         availabilitySchedule = {
-            'sunday': [],
-            'monday': [],
-            'tuesday': [],
-            'wednesday': [],
-            'thursday': [],
-            'friday': [],
-            'saturday': []
+            'sunday': ['17:30', '18:00', '18:30', '19:30', '20:00', '20:30', '21:00'],
+            'monday': ['17:30', '18:00', '18:30'],
+            'tuesday': ['11:30', '14:00', '14:30'],
+            'wednesday': ['15:30', '16:00'],
+            'thursday': ['10:00', '10:30', '11:00', '11:30', '14:30'],
+            'friday': ['17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00'],
+            'saturday': ['12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00']
         };
-        console.log('No schedule found in localStorage, using empty fallback');
+        console.log('No schedule found in localStorage, using YOUR EXACT availability schedule');
     }
     
     // Make availabilitySchedule globally accessible
