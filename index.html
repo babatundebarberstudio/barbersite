@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babatunde's Barber Studio - Premium Haircuts & Styling</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span>Babatunde's Barber Studio</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><button class="nav-link book-btn" onclick="testBookingButton()">Book Now</button></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Premium Haircuts & Styling</h1>
+                <p class="hero-subtitle">Experience the art of precision cutting and styling at Babatunde's Barber Studio</p>
+                <button class="cta-button" onclick="testBookingButton()">Book Your Appointment</button>
+            </div>
+            <div class="hero-image">
+                <img src="logo/Screenshot 2025-09-25 154917.png" alt="Babatunde's Barber Studio Logo" class="hero-photo">
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Preview Section -->
+    <section id="services-preview" class="services-preview">
+        <div class="container">
+            <h2 class="section-title">Professional Haircuts & Styling</h2>
+            <p class="section-subtitle">Experience the art of precision cutting with our expert barbering services</p>
+            <div class="preview-content">
+                <div class="preview-text">
+                    <h3>Choose Your Perfect Style</h3>
+                    <p>Browse through our gallery of professional haircuts including tapers, fades, line-ups, and custom designs. Each style is crafted with precision and attention to detail.</p>
+                    <ul class="service-list">
+                        <li>✓ Mid Taper, Mid Fade, Low Taper, Low Fade</li>
+                        <li>✓ High Taper, High Fade, Burst Fade</li>
+                        <li>✓ Line Up, Clean Up, Custom Designs</li>
+                        <li>✓ Additional services: Beard, Eyebrow, Goatee line-up</li>
+                    </ul>
+                </div>
+                <div class="preview-action">
+                    <button class="cta-button-large" onclick="testBookingButton()">View All Services & Book Now</button>
+                    <p class="preview-note">Click to see our full service gallery and book your appointment</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">About Babatunde's Barber Studio</h2>
+                    <p>With over 5+ years of experience in the art of barbering, Babatunde brings precision, style, and passion to every cut. Our studio combines traditional techniques with modern trends to deliver exceptional results.</p>
+                    <p>We believe that a great haircut is more than just trimming hair—it's about understanding your style, personality, and lifestyle to create a look that's uniquely yours.</p>
+                    <div class="about-features">
+                        <div class="feature">
+                            <i class="fas fa-award"></i>
+                            <span>5+ Years Experience</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-star"></i>
+                            <span>Premium Quality</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-clock"></i>
+                            <span>Flexible Scheduling</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="about-placeholder">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>720-499-5415</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>babatundesbarberstudio@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Panel -->
+    <section class="admin-panel" style="background: #f8f9fa; padding: 20px 0; text-align: center;">
+        <div class="container">
+            <h3 style="color: #2c3e50; margin-bottom: 15px;">Admin Panel</h3>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="admin.html" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <i class="fas fa-calendar-alt"></i> Manage Schedule
+                </a>
+                <a href="booking-manager.html" style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <i class="fas fa-list-alt"></i> View Bookings
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="modal">
+        <div class="modal-content booking-modal-large">
+            <span class="close">&times;</span>
+            
+            <!-- Step 1: Service Selection -->
+            <div id="step-1" class="booking-step active">
+                <h2>Choose Your Service</h2>
+                <div class="services-grid-modal">
+                    <!-- Services will be populated by JavaScript -->
+                </div>
+                <div class="step-navigation">
+                    <button type="button" class="btn-next" onclick="nextStep()" disabled>Next: Additional Services</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Additional Services -->
+            <div id="step-2" class="booking-step">
+                <h2>Additional Services</h2>
+                <div class="additional-services">
+                    <div class="service-option">
+                        <input type="checkbox" id="beard-lineup" name="additional" value="beard-lineup">
+                        <label for="beard-lineup">
+                            <span class="service-name">Beard Line Up</span>
+                            <span class="service-price">FREE</span>
+                        </label>
+                    </div>
+                    <div class="service-option">
+                        <input type="checkbox" id="eyebrow-lineup" name="additional" value="eyebrow-lineup">
+                        <label for="eyebrow-lineup">
+                            <span class="service-name">Eyebrow Line Up</span>
+                            <span class="service-price">FREE</span>
+                        </label>
+                    </div>
+                    <div class="service-option">
+                        <input type="checkbox" id="braid-gel" name="additional" value="braid-gel">
+                        <label for="braid-gel">
+                            <span class="service-name">Braid Gel/Oil</span>
+                            <span class="service-price">FREE</span>
+                        </label>
+                    </div>
+                    <div class="service-option">
+                        <input type="checkbox" id="goatee-lineup" name="additional" value="goatee-lineup">
+                        <label for="goatee-lineup">
+                            <span class="service-name">Goatee Line Up</span>
+                            <span class="service-price">FREE</span>
+                        </label>
+                    </div>
+                    <div class="service-option">
+                        <input type="checkbox" id="design-option" name="additional" value="design-option">
+                        <label for="design-option">
+                            <span class="service-name">Custom Design</span>
+                            <span class="service-price">$15.00</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Design Upload (hidden by default) -->
+                <div id="design-upload" class="design-upload" style="display: none;">
+                    <div class="design-options">
+                        <div class="design-option">
+                            <label for="design-file">Upload Design Reference (Optional):</label>
+                            <input type="file" id="design-file" name="design-file" accept="image/*">
+                            <p class="upload-note">Upload an image of the design you'd like</p>
+                        </div>
+                        
+                        <div class="design-option">
+                            <label for="design-description">Describe Your Design (Optional):</label>
+                            <textarea id="design-description" name="design-description" rows="3" placeholder="Describe the design you want..."></textarea>
+                            <p class="upload-note">Describe the design you'd like in detail</p>
+                        </div>
+                        
+                        <div class="design-requirement">
+                            <p class="requirement-note">⚠️ You must provide either a photo OR a description (or both) for custom designs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-navigation">
+                    <button type="button" class="btn-back" onclick="prevStep()">Back: Choose Service</button>
+                    <button type="button" class="btn-next" onclick="nextStep()">Next: Select Time</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Availability -->
+            <div id="step-3" class="booking-step">
+                <h2>Select Date & Time</h2>
+                <div class="availability-section">
+                    <div class="form-group">
+                        <label for="date">Select Date</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Available Times</label>
+                        <div id="available-times" class="available-times">
+                            <p class="no-date-selected">Please select a date to see available times</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-navigation">
+                    <button type="button" class="btn-back" onclick="prevStep()">Back: Additional Services</button>
+                    <button type="button" class="btn-next" onclick="nextStep()" disabled>Next: Your Information</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Customer Information -->
+            <div id="step-4" class="booking-step">
+                <h2>Your Information</h2>
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reference-photo">Upload Reference Photo (Optional)</label>
+                        <input type="file" id="reference-photo" name="reference-photo" accept="image/*">
+                        <p class="upload-note">Upload a photo of a haircut you saw online that you'd like</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Special Requests (Optional)</label>
+                        <textarea id="notes" name="notes" rows="3"></textarea>
+                    </div>
+                    <div class="step-navigation">
+                        <button type="button" class="btn-back" onclick="prevStep()">Back: Select Time</button>
+                        <button type="submit" class="submit-btn">Complete Booking</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Step 5: Confirmation -->
+            <div id="step-5" class="booking-step">
+                <div class="confirmation-header">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>Booking Confirmed!</h2>
+                    <p class="confirmation-number">Confirmation #<span id="confirmation-number"></span></p>
+                </div>
+                
+                <div class="booking-summary">
+                    <div class="summary-section">
+                        <h3><i class="fas fa-calendar-alt"></i> Appointment Details</h3>
+                        <div class="summary-item">
+                            <span class="summary-label">Date:</span>
+                            <span id="summary-date"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Time:</span>
+                            <span id="summary-time"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Service:</span>
+                            <span id="summary-service"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Additional Services:</span>
+                            <span id="summary-additional"></span>
+                        </div>
+                        <div class="summary-item total">
+                            <span class="summary-label">Total:</span>
+                            <span id="summary-total"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-section">
+                        <h3><i class="fas fa-user"></i> Your Information</h3>
+                        <div class="summary-item">
+                            <span class="summary-label">Name:</span>
+                            <span id="summary-name"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Email:</span>
+                            <span id="summary-email"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Phone:</span>
+                            <span id="summary-phone"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="confirmation-actions">
+                    <button type="button" class="btn-primary" onclick="closeBookingModal()">Done</button>
+                    <button type="button" class="btn-secondary" onclick="printConfirmation()">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-cut"></i>
+                    <span>Babatunde's Barber Studio</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#services">Services</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Babatunde's Barber Studio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="schedule.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

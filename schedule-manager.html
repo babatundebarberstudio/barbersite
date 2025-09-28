@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Manager - Babatunde Barber</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .day-section {
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .day-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .day-content {
+            padding: 20px;
+        }
+
+        .time-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .time-input {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .time-input input {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 100px;
+        }
+
+        .time-input input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-time-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .add-time-btn:hover {
+            background: #218838;
+        }
+
+        .remove-time-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        .remove-time-btn:hover {
+            background: #c82333;
+        }
+
+        .no-availability {
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .current-schedule {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .current-schedule h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .schedule-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .schedule-day {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .schedule-day h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .schedule-times {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .schedule-times:empty::before {
+            content: "No availability";
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Schedule Manager</h1>
+            <p>Set your availability for each day of the week</p>
+        </div>
+
+        <div class="content">
+            <!-- Current Schedule Display -->
+            <div class="current-schedule">
+                <h3>Current Schedule</h3>
+                <div class="schedule-display" id="current-schedule-display">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Schedule Editor -->
+            <div id="schedule-editor">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <div class="actions">
+                <button class="save-btn" onclick="saveSchedule()">
+                    💾 Save All Changes
+                </button>
+                <br><br>
+                <button class="save-btn" onclick="quickFillTimes()" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); font-size: 1rem; padding: 10px 30px;">
+                    ⚡ Quick Fill: Friday 5:30-9PM & Saturday 12-10PM
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Schedule data
+        let schedule = {};
+
+        // Day names
+        const dayNames = {
+            'sunday': 'Sunday',
+            'monday': 'Monday', 
+            'tuesday': 'Tuesday',
+            'wednesday': 'Wednesday',
+            'thursday': 'Thursday',
+            'friday': 'Friday',
+            'saturday': 'Saturday'
+        };
+
+        // Generate time slots in 30-minute intervals
+        function generateTimeSlots(startTime, endTime) {
+            const slots = [];
+            const start = startTime.split(':');
+            const end = endTime.split(':');
+            
+            let currentHour = parseInt(start[0]);
+            let currentMinute = parseInt(start[1]);
+            const endHour = parseInt(end[0]);
+            const endMinute = parseInt(end[1]);
+            
+            while (currentHour < endHour || (currentHour === endHour && currentMinute <= endMinute)) {
+                const timeString = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+                slots.push(timeString);
+                
+                currentMinute += 30;
+                if (currentMinute >= 60) {
+                    currentMinute = 0;
+                    currentHour++;
+                }
+            }
+            
+            return slots;
+        }
+
+        // Load schedule from localStorage
+        function loadSchedule() {
+            const stored = localStorage.getItem('babatundeBarberSchedule');
+            if (stored) {
+                schedule = JSON.parse(stored);
+            } else {
+                // Default schedule with your specified times
+                schedule = {
+                    'sunday': [],
+                    'monday': [],
+                    'tuesday': [],
+                    'wednesday': [],
+                    'thursday': [],
+                    'friday': generateTimeSlots('17:30', '21:00'), // 5:30 PM to 9 PM
+                    'saturday': generateTimeSlots('12:00', '22:00') // 12 PM to 10 PM
+                };
+            }
+            console.log('Schedule loaded:', schedule);
+        }
+
+        // Save schedule to localStorage
+        function saveSchedule() {
+            localStorage.setItem('babatundeBarberSchedule', JSON.stringify(schedule));
+            showNotification('Schedule saved successfully!', 'success');
+            displayCurrentSchedule();
+            console.log('Schedule saved:', schedule);
+        }
+
+        // Display current schedule
+        function displayCurrentSchedule() {
+            const container = document.getElementById('current-schedule-display');
+            container.innerHTML = '';
+
+            Object.keys(dayNames).forEach(dayKey => {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'schedule-day';
+                
+                const times = schedule[dayKey] || [];
+                const timeText = times.length > 0 ? times.join(', ') : 'No availability';
+                
+                dayDiv.innerHTML = `
+                    <h4>${dayNames[dayKey]}</h4>
+                    <div class="schedule-times">${timeText}</div>
+                `;
+                
+                container.appendChild(dayDiv);
+            });
+        }
+
+        // Create schedule editor
+        function createScheduleEditor() {
+            const container = document.getElementById('schedule-editor');
+            container.innerHTML = '';
+
+            Object.keys(dayNames).forEach(dayKey => {
+                const daySection = document.createElement('div');
+                daySection.className = 'day-section';
+                
+                const times = schedule[dayKey] || [];
+                
+                daySection.innerHTML = `
+                    <div class="day-header">${dayNames[dayKey]}</div>
+                    <div class="day-content">
+                        <div class="time-inputs" id="times-${dayKey}">
+                            ${times.map((time, index) => `
+                                <div class="time-input">
+                                    <input type="time" value="${time}" onchange="updateTime('${dayKey}', ${index}, this.value)">
+                                    <button class="remove-time-btn" onclick="removeTime('${dayKey}', ${index})">×</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="add-time-btn" onclick="addTime('${dayKey}')">
+                            + Add Time Slot
+                        </button>
+                        ${times.length === 0 ? '<div class="no-availability">No availability set for this day</div>' : ''}
+                    </div>
+                `;
+                
+                container.appendChild(daySection);
+            });
+        }
+
+        // Add time slot
+        function addTime(dayKey) {
+            if (!schedule[dayKey]) {
+                schedule[dayKey] = [];
+            }
+            
+            schedule[dayKey].push('09:00');
+            createScheduleEditor();
+        }
+
+        // Remove time slot
+        function removeTime(dayKey, index) {
+            if (schedule[dayKey] && schedule[dayKey].length > index) {
+                schedule[dayKey].splice(index, 1);
+                createScheduleEditor();
+            }
+        }
+
+        // Update time
+        function updateTime(dayKey, index, newTime) {
+            if (schedule[dayKey] && schedule[dayKey].length > index) {
+                schedule[dayKey][index] = newTime;
+            }
+        }
+
+        // Quick fill function for your specified times
+        function quickFillTimes() {
+            schedule['friday'] = generateTimeSlots('17:30', '21:00'); // 5:30 PM to 9 PM
+            schedule['saturday'] = generateTimeSlots('12:00', '22:00'); // 12 PM to 10 PM
+            
+            createScheduleEditor();
+            showNotification('Friday and Saturday times filled!', 'success');
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSchedule();
+            displayCurrentSchedule();
+            createScheduleEditor();
+        });
+    </script>
+</body>
+</html>

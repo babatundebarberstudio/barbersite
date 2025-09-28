@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmailJS Minimal Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #d4af37;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .test-button:hover {
+            background: #b8941f;
+        }
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 EmailJS Minimal Test</h1>
+        <p>This tests with the absolute minimum parameters that most EmailJS templates expect.</p>
+        
+        <button class="test-button" onclick="testMinimalEmail()">
+            📧 Send Minimal Test Email
+        </button>
+        
+        <div class="test-results" id="test-results">
+            <h3>Test Results:</h3>
+            <p>Click the test button above to see results here.</p>
+        </div>
+    </div>
+
+    <!-- Include EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        // Initialize EmailJS
+        emailjs.init("B0bwe2zqFaC5Xrvir");
+        
+        async function testMinimalEmail() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<h3>Test Results:</h3><p>Sending minimal test email...</p>';
+            
+            try {
+                // Try with the most basic parameters that most EmailJS templates expect
+                const templateParams = {
+                    to_email: 'myself34154@gmail.com',
+                    from_name: 'Babatunde Barber Studio',
+                    message: 'This is a test email from your booking system!',
+                    reply_to: 'matthewswondwesen1@gmail.com'
+                };
+                
+                console.log('Sending minimal test email with params:', templateParams);
+                
+                const result = await emailjs.send(
+                    'service_32atpco',
+                    'template_pysusaq',
+                    templateParams
+                );
+                
+                resultsDiv.innerHTML = `
+                    <h3>✅ Minimal Test Results:</h3>
+                    <p><strong>SUCCESS!</strong> Minimal test email sent successfully!</p>
+                    <p>Status: ${result.status}</p>
+                    <p>Text: ${result.text}</p>
+                    <p>Check your email: myself34154@gmail.com</p>
+                `;
+                
+            } catch (error) {
+                console.error('Minimal email test failed:', error);
+                resultsDiv.innerHTML = `
+                    <h3>❌ Minimal Test Results:</h3>
+                    <p><strong>FAILED!</strong> Error sending minimal email.</p>
+                    <p>Error: ${error.text || error.message}</p>
+                    <p>Status: ${error.status}</p>
+                    <p><strong>This means there's a fundamental issue with your EmailJS setup:</strong></p>
+                    <ul>
+                        <li><strong>Service ID 'service_32atpco' might be wrong</strong></li>
+                        <li><strong>Template ID 'template_pysusaq' might be wrong</strong></li>
+                        <li><strong>Your EmailJS service might not be active</strong></li>
+                        <li><strong>Your template might not be published</strong></li>
+                    </ul>
+                    <p><strong>Next steps:</strong></p>
+                    <ol>
+                        <li>Go to your EmailJS dashboard</li>
+                        <li>Check your Service ID and Template ID</li>
+                        <li>Make sure your template is published</li>
+                        <li>Update the IDs in this test and try again</li>
+                    </ol>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

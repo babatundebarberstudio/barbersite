@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babatunde's Barber Studio - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #f8f9fa;
+            --accent-color: #d4af37;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --border-color: #e9ecef;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--secondary-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .admin-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .admin-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .admin-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .admin-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-section h2 i {
+            color: var(--accent-color);
+        }
+
+        .day-schedule {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--secondary-color);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .day-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .day-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: var(--border-color);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active {
+            background: var(--accent-color);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: var(--white);
+            border-radius: 50%;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .time-slots-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .time-slot-input {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .time-slot-input input {
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            width: 100px;
+            text-align: center;
+        }
+
+        .time-slot-input input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .remove-time {
+            background: var(--danger-color);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .remove-time:hover {
+            background: #c82333;
+        }
+
+        .add-time-btn {
+            background: var(--success-color);
+            color: var(--white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .add-time-btn:hover {
+            background: #218838;
+        }
+
+        .save-btn {
+            background: var(--accent-color);
+            color: var(--white);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .save-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: var(--white);
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .notification.success {
+            background: var(--success-color);
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .instructions {
+            background: var(--secondary-color);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .instructions h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 5px;
+            color: var(--text-light);
+        }
+
+        .current-schedule {
+            background: var(--secondary-color);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .current-schedule h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .schedule-display {
+            font-family: 'Courier New', monospace;
+            background: var(--white);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 10px;
+            }
+
+            .admin-header h1 {
+                font-size: 2rem;
+            }
+
+            .day-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .time-slots-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-crown"></i> Admin Panel</h1>
+            <p>Babatunde's Barber Studio - Manage Your Availability</p>
+        </div>
+
+        <div class="admin-section">
+            <h2><i class="fas fa-info-circle"></i> How to Use This Panel</h2>
+            <div class="instructions">
+                <h3>Quick Instructions:</h3>
+                <ul>
+                    <li><strong>Toggle Days:</strong> Use the switch to enable/disable availability for each day</li>
+                    <li><strong>Add Times:</strong> Click "Add Time Slot" to add available appointment times</li>
+                    <li><strong>Remove Times:</strong> Click the red "×" button to remove unwanted time slots</li>
+                    <li><strong>Save Changes:</strong> Click "Save All Changes" to update your website</li>
+                    <li><strong>Time Format:</strong> Use 24-hour format (e.g., 19:00 for 7:00 PM)</li>
+                    <li><strong>Advance Booking:</strong> Customers must book at least 1 day in advance</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2><i class="fas fa-calendar-check"></i> Current Schedule</h2>
+            <div class="current-schedule">
+                <h3>Your Current Availability:</h3>
+                <div id="current-schedule-display" class="schedule-display">
+                    Loading current schedule...
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2><i class="fas fa-clock"></i> Manage Your Availability</h2>
+            
+            <div id="schedule-editor">
+                <!-- Schedule will be populated by JavaScript -->
+            </div>
+
+            <button class="save-btn" onclick="saveSchedule()">
+                <i class="fas fa-save"></i> Save All Changes
+            </button>
+        </div>
+    </div>
+
+    <script src="schedule.js"></script>
+    <script>
+        // Initialize availability schedule (will be loaded in DOMContentLoaded)
+        let availabilitySchedule = {};
+
+        const dayNames = {
+            'sunday': 'Sunday',
+            'monday': 'Monday', 
+            'tuesday': 'Tuesday',
+            'wednesday': 'Wednesday',
+            'thursday': 'Thursday',
+            'friday': 'Friday',
+            'saturday': 'Saturday'
+        };
+
+        function displayCurrentSchedule() {
+            const display = document.getElementById('current-schedule-display');
+            let scheduleText = '';
+            
+            Object.entries(dayNames).forEach(([key, name]) => {
+                const times = availabilitySchedule[key];
+                if (times && times.length > 0) {
+                    scheduleText += `${name}: ${times.join(', ')}\n`;
+                } else {
+                    scheduleText += `${name}: No availability\n`;
+                }
+            });
+            
+            display.textContent = scheduleText;
+        }
+
+        function createScheduleEditor() {
+            const editor = document.getElementById('schedule-editor');
+            editor.innerHTML = '';
+
+            Object.entries(dayNames).forEach(([key, name]) => {
+                const times = availabilitySchedule[key] || [];
+                const isEnabled = times.length > 0;
+
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day-schedule';
+                dayDiv.innerHTML = `
+                    <div class="day-header">
+                        <div class="day-name">${name}</div>
+                        <div class="day-toggle">
+                            <span>Available</span>
+                            <div class="toggle-switch ${isEnabled ? 'active' : ''}" onclick="toggleDay('${key}')">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="time-slots-container" id="times-${key}" style="display: ${isEnabled ? 'grid' : 'none'}">
+                        ${times.map(time => `
+                            <div class="time-slot-input">
+                                <input type="time" value="${time}" onchange="updateTime('${key}', this)">
+                                <button class="remove-time" onclick="removeTime('${key}', this)">×</button>
+                            </div>
+                        `).join('')}
+                        <button class="add-time-btn" onclick="addTime('${key}')">+ Add Time Slot</button>
+                    </div>
+                `;
+                editor.appendChild(dayDiv);
+            });
+        }
+
+        function toggleDay(dayKey) {
+            const toggle = document.querySelector(`#schedule-editor .day-schedule:nth-child(${Object.keys(dayNames).indexOf(dayKey) + 1}) .toggle-switch`);
+            const timeContainer = document.getElementById(`times-${dayKey}`);
+            
+            if (toggle.classList.contains('active')) {
+                // Disable day
+                toggle.classList.remove('active');
+                timeContainer.style.display = 'none';
+                availabilitySchedule[dayKey] = [];
+            } else {
+                // Enable day
+                toggle.classList.add('active');
+                timeContainer.style.display = 'grid';
+                if (!availabilitySchedule[dayKey] || availabilitySchedule[dayKey].length === 0) {
+                    availabilitySchedule[dayKey] = ['19:00']; // Default time
+                    updateTimeDisplay(dayKey);
+                }
+            }
+        }
+
+        function addTime(dayKey) {
+            if (!availabilitySchedule[dayKey]) {
+                availabilitySchedule[dayKey] = [];
+            }
+            
+            // Add a default time
+            const defaultTime = '19:00';
+            availabilitySchedule[dayKey].push(defaultTime);
+            updateTimeDisplay(dayKey);
+        }
+
+        function removeTime(dayKey, button) {
+            const timeInput = button.previousElementSibling;
+            const timeValue = timeInput.value;
+            
+            availabilitySchedule[dayKey] = availabilitySchedule[dayKey].filter(time => time !== timeValue);
+            updateTimeDisplay(dayKey);
+        }
+
+        function updateTime(dayKey, input) {
+            // This function handles individual time updates
+            // The time slots are already bound to the array
+        }
+
+        function updateTimeDisplay(dayKey) {
+            const container = document.getElementById(`times-${dayKey}`);
+            const times = availabilitySchedule[dayKey] || [];
+            
+            container.innerHTML = times.map(time => `
+                <div class="time-slot-input">
+                    <input type="time" value="${time}" onchange="updateTimeSlot('${dayKey}', this, '${time}')">
+                    <button class="remove-time" onclick="removeTime('${dayKey}', this)">×</button>
+                </div>
+            `).join('') + '<button class="add-time-btn" onclick="addTime(\'' + dayKey + '\')">+ Add Time Slot</button>';
+        }
+
+        function updateTimeSlot(dayKey, input, oldTime) {
+            const newTime = input.value;
+            const index = availabilitySchedule[dayKey].indexOf(oldTime);
+            if (index !== -1) {
+                availabilitySchedule[dayKey][index] = newTime;
+            }
+        }
+
+        function saveSchedule() {
+            console.log('Saving schedule:', availabilitySchedule);
+            
+            // Update the shared schedule system
+            if (window.BarberSchedule) {
+                BarberSchedule.updateSchedule(availabilitySchedule);
+                console.log('Schedule updated in shared system');
+            } else {
+                console.log('BarberSchedule not available, saving to localStorage only');
+                localStorage.setItem('barberSchedule', JSON.stringify(availabilitySchedule));
+            }
+            
+            // Show success notification
+            showNotification('Schedule saved successfully! Changes are now live on your website.', 'success');
+            
+            // Update the current schedule display
+            displayCurrentSchedule();
+            
+            // Also save to localStorage as backup
+            if (window.BarberSchedule) {
+                BarberSchedule.saveScheduleToStorage();
+            }
+            
+            console.log('Schedule save completed:', availabilitySchedule);
+        }
+
+        function showNotification(message, type) {
+            // Remove existing notification
+            const existing = document.querySelector('.notification');
+            if (existing) {
+                existing.remove();
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        // Initialize the admin panel
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load the current schedule from shared system
+            if (window.BarberSchedule) {
+                availabilitySchedule = BarberSchedule.getCurrentSchedule();
+                console.log('Admin panel loaded schedule:', availabilitySchedule);
+            } else {
+                // Fallback to default schedule if shared system isn't available
+                availabilitySchedule = {
+                    'sunday': ['19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00'],
+                    'monday': ['17:30', '18:00', '18:30', '19:00', '19:30'],
+                    'tuesday': ['11:00', '11:30'],
+                    'wednesday': ['15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00'],
+                    'thursday': ['10:00', '10:30', '11:00', '11:30', '12:00', '18:30', '19:00', '19:30'],
+                    'friday': [],
+                    'saturday': ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00']
+                };
+                console.log('Admin panel using fallback schedule:', availabilitySchedule);
+            }
+            
+            displayCurrentSchedule();
+            createScheduleEditor();
+        });
+    </script>
+</body>
+</html>

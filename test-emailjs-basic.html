@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmailJS Basic Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #d4af37;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .test-button:hover {
+            background: #b8941f;
+        }
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 EmailJS Basic Configuration Test</h1>
+        <p>Let's test your EmailJS configuration step by step.</p>
+        
+        <div class="input-group">
+            <label for="service-id">Service ID:</label>
+            <input type="text" id="service-id" value="service_32atpco" placeholder="Your EmailJS Service ID">
+        </div>
+        
+        <div class="input-group">
+            <label for="template-id">Template ID:</label>
+            <input type="text" id="template-id" value="template_pysusaq" placeholder="Your EmailJS Template ID">
+        </div>
+        
+        <div class="input-group">
+            <label for="public-key">Public Key:</label>
+            <input type="text" id="public-key" value="B0bwe2zqFaC5Xrvir" placeholder="Your EmailJS Public Key">
+        </div>
+        
+        <div class="input-group">
+            <label for="test-email">Test Email:</label>
+            <input type="email" id="test-email" value="myself34154@gmail.com" placeholder="Email to send test to">
+        </div>
+        
+        <button class="test-button" onclick="testEmailJSConfig()">
+            🚀 Test EmailJS Configuration
+        </button>
+        
+        <button class="test-button" onclick="testSimpleEmail()">
+            📧 Send Simple Test Email
+        </button>
+        
+        <div class="test-results" id="test-results">
+            <h3>Test Results:</h3>
+            <p>Click a test button above to see results here.</p>
+        </div>
+    </div>
+
+    <!-- Include EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        async function testEmailJSConfig() {
+            const resultsDiv = document.getElementById('test-results');
+            const serviceId = document.getElementById('service-id').value;
+            const templateId = document.getElementById('template-id').value;
+            const publicKey = document.getElementById('public-key').value;
+            
+            resultsDiv.innerHTML = '<h3>Test Results:</h3><p>Testing EmailJS configuration...</p>';
+            
+            try {
+                // Initialize with the provided key
+                emailjs.init(publicKey);
+                console.log('EmailJS initialized with key:', publicKey);
+                
+                resultsDiv.innerHTML = `
+                    <h3>✅ Configuration Test Results:</h3>
+                    <p><strong>SUCCESS!</strong> EmailJS initialized successfully.</p>
+                    <p>Service ID: ${serviceId}</p>
+                    <p>Template ID: ${templateId}</p>
+                    <p>Public Key: ${publicKey}</p>
+                    <p>Now try the "Send Simple Test Email" button.</p>
+                `;
+                
+            } catch (error) {
+                console.error('Configuration test failed:', error);
+                resultsDiv.innerHTML = `
+                    <h3>❌ Configuration Test Results:</h3>
+                    <p><strong>FAILED!</strong> Error initializing EmailJS.</p>
+                    <p>Error: ${error.message}</p>
+                    <p>Check your public key and make sure it's correct.</p>
+                `;
+            }
+        }
+        
+        async function testSimpleEmail() {
+            const resultsDiv = document.getElementById('test-results');
+            const serviceId = document.getElementById('service-id').value;
+            const templateId = document.getElementById('template-id').value;
+            const publicKey = document.getElementById('public-key').value;
+            const testEmail = document.getElementById('test-email').value;
+            
+            resultsDiv.innerHTML = '<h3>Test Results:</h3><p>Sending simple test email...</p>';
+            
+            try {
+                // Initialize with the provided key
+                emailjs.init(publicKey);
+                
+                // Try the simplest possible template parameters
+                const templateParams = {
+                    to_email: testEmail,
+                    message: 'This is a test email from your booking system!',
+                    from_name: 'Babatunde Barber Studio'
+                };
+                
+                console.log('Sending test email with params:', templateParams);
+                
+                const result = await emailjs.send(
+                    serviceId,
+                    templateId,
+                    templateParams
+                );
+                
+                resultsDiv.innerHTML = `
+                    <h3>✅ Email Test Results:</h3>
+                    <p><strong>SUCCESS!</strong> Test email sent successfully!</p>
+                    <p>Status: ${result.status}</p>
+                    <p>Text: ${result.text}</p>
+                    <p>Check your email: ${testEmail}</p>
+                    <p>If this works, the issue is with the complex template parameters.</p>
+                `;
+                
+            } catch (error) {
+                console.error('Email test failed:', error);
+                resultsDiv.innerHTML = `
+                    <h3>❌ Email Test Results:</h3>
+                    <p><strong>FAILED!</strong> Error sending email.</p>
+                    <p>Error: ${error.text || error.message}</p>
+                    <p>Status: ${error.status}</p>
+                    <p>This suggests an issue with your EmailJS setup:</p>
+                    <ul>
+                        <li>Check if your Service ID is correct</li>
+                        <li>Check if your Template ID is correct</li>
+                        <li>Check if your Public Key is correct</li>
+                        <li>Make sure your EmailJS service is active</li>
+                        <li>Make sure your template is published</li>
+                    </ul>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

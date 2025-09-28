@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmailJS Recipient Parameter Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #d4af37;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .test-button:hover {
+            background: #b8941f;
+        }
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .param-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .param-button {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .param-button:hover {
+            background: #e9ecef;
+            border-color: #d4af37;
+        }
+        .param-button.success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .param-button.error {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 EmailJS Recipient Parameter Test</h1>
+        <p>This will test all common recipient parameter names to find what your EmailJS template expects.</p>
+        
+        <div class="param-list" id="param-list">
+            <!-- Will be populated by JavaScript -->
+        </div>
+        
+        <button class="test-button" onclick="testAllParameters()">
+            🚀 Test All Parameters
+        </button>
+        
+        <div class="test-results" id="test-results">
+            <h3>Test Results:</h3>
+            <p>Click "Test All Parameters" to test all recipient parameter names at once.</p>
+        </div>
+    </div>
+
+    <!-- Include EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        // Initialize EmailJS
+        emailjs.init("B0bwe2zqFaC5Xrvir");
+        
+        const recipientParams = [
+            'to_email',
+            'email',
+            'to',
+            'user_email',
+            'recipient_email',
+            'reply_to',
+            'recipient',
+            'to_name',
+            'user_name',
+            'from_email',
+            'sender_email'
+        ];
+        
+        function createParamButtons() {
+            const paramList = document.getElementById('param-list');
+            paramList.innerHTML = '';
+            
+            recipientParams.forEach(param => {
+                const button = document.createElement('div');
+                button.className = 'param-button';
+                button.textContent = param;
+                button.onclick = () => testSingleParameter(param);
+                paramList.appendChild(button);
+            });
+        }
+        
+        async function testSingleParameter(paramName) {
+            const button = document.querySelector(`[onclick="testSingleParameter('${paramName}')"]`);
+            button.textContent = 'Testing...';
+            button.style.background = '#fff3cd';
+            
+            try {
+                const templateParams = {
+                    [paramName]: 'myself34154@gmail.com',
+                    message: `Test email using parameter: ${paramName}`,
+                    from_name: 'Babatunde Barber Studio'
+                };
+                
+                console.log(`Testing parameter ${paramName}:`, templateParams);
+                
+                const result = await emailjs.send(
+                    'service_32atpco',
+                    'template_pysusaq',
+                    templateParams
+                );
+                
+                button.className = 'param-button success';
+                button.textContent = `✅ ${paramName}`;
+                console.log(`SUCCESS with ${paramName}:`, result);
+                
+            } catch (error) {
+                button.className = 'param-button error';
+                button.textContent = `❌ ${paramName}`;
+                console.error(`FAILED with ${paramName}:`, error);
+            }
+        }
+        
+        async function testAllParameters() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<h3>Test Results:</h3><p>Testing all parameters...</p>';
+            
+            const results = [];
+            
+            for (const param of recipientParams) {
+                try {
+                    const templateParams = {
+                        [param]: 'myself34154@gmail.com',
+                        message: `Test email using parameter: ${param}`,
+                        from_name: 'Babatunde Barber Studio'
+                    };
+                    
+                    console.log(`Testing parameter ${param}:`, templateParams);
+                    
+                    const result = await emailjs.send(
+                        'service_32atpco',
+                        'template_pysusaq',
+                        templateParams
+                    );
+                    
+                    results.push({ param, success: true, result });
+                    console.log(`SUCCESS with ${param}:`, result);
+                    
+                } catch (error) {
+                    results.push({ param, success: false, error });
+                    console.error(`FAILED with ${param}:`, error);
+                }
+            }
+            
+            const successfulParams = results.filter(r => r.success);
+            const failedParams = results.filter(r => !r.success);
+            
+            let resultHTML = '<h3>✅ Test Results:</h3>';
+            
+            if (successfulParams.length > 0) {
+                resultHTML += '<p><strong>SUCCESSFUL Parameters:</strong></p><ul>';
+                successfulParams.forEach(r => {
+                    resultHTML += `<li><strong>${r.param}</strong> - Status: ${r.result.status}</li>`;
+                });
+                resultHTML += '</ul>';
+                resultHTML += '<p><strong>Use one of these parameters in your main script!</strong></p>';
+            }
+            
+            if (failedParams.length > 0) {
+                resultHTML += '<p><strong>FAILED Parameters:</strong></p><ul>';
+                failedParams.forEach(r => {
+                    resultHTML += `<li><strong>${r.param}</strong> - Error: ${r.error.text || r.error.message}</li>`;
+                });
+                resultHTML += '</ul>';
+            }
+            
+            if (successfulParams.length === 0) {
+                resultHTML += '<p><strong>❌ No parameters worked. This suggests:</strong></p>';
+                resultHTML += '<ul>';
+                resultHTML += '<li>Your Service ID might be wrong</li>';
+                resultHTML += '<li>Your Template ID might be wrong</li>';
+                resultHTML += '<li>Your template might not be published</li>';
+                resultHTML += '<li>Your EmailJS service might not be active</li>';
+                resultHTML += '</ul>';
+            }
+            
+            resultsDiv.innerHTML = resultHTML;
+        }
+        
+        // Initialize the page
+        createParamButtons();
+    </script>
+</body>
+</html>

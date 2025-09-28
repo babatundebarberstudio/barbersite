@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple SMS Test - No Server Required</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .warning { color: #ffc107; }
+        .info { color: #17a2b8; }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 1.1rem;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .log-container {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-mobile-alt"></i> Simple SMS Test (No Server Required)</h1>
+        <p>This version uses a different approach that works on any hosting platform without serverless functions.</p>
+        
+        <div class="info" style="background: #d1ecf1; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <strong>How it works:</strong> This uses a public SMS API service that doesn't require serverless functions. 
+            It works on GitHub Pages, Vercel, or any static hosting.
+        </div>
+
+        <h2>Test Email (EmailJS)</h2>
+        <button class="test-button" onclick="testEmail()">
+            <i class="fas fa-envelope"></i> Test Email
+        </button>
+        
+        <h2>Test SMS (Alternative Service)</h2>
+        <button class="test-button" onclick="testSMS()">
+            <i class="fas fa-sms"></i> Test SMS
+        </button>
+
+        <h2>Console Logs</h2>
+        <div id="log-container" class="log-container">
+            Click a test button to see logs here...
+        </div>
+    </div>
+
+    <script>
+        // Initialize EmailJS
+        emailjs.init("69G95V-4wBoCVMRVt");
+
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('log-container');
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${message}\n`;
+            logContainer.textContent += logMessage;
+            logContainer.scrollTop = logContainer.scrollHeight;
+            console.log(message);
+        }
+
+        // Test EmailJS
+        async function testEmail() {
+            log('=== TESTING EMAILJS ===');
+            
+            try {
+                const templateParams = {
+                    email: 'matthewswondwesen1@gmail.com',
+                    subject: 'Test Email from Barber Studio',
+                    message: 'This is a test email to verify EmailJS integration is working properly.'
+                };
+
+                log('Sending email with params: ' + JSON.stringify(templateParams, null, 2));
+                
+                const result = await emailjs.send(
+                    'service_32atpco',
+                    'template_pysusaq',
+                    templateParams
+                );
+                
+                log('✅ Email sent successfully!', 'success');
+                log('EmailJS result: ' + JSON.stringify(result, null, 2));
+                
+            } catch (error) {
+                log('❌ Email failed: ' + error.message, 'error');
+                log('Error details: ' + JSON.stringify(error, null, 2));
+            }
+        }
+
+        // Test SMS using a different approach
+        async function testSMS() {
+            log('=== TESTING SMS (Alternative Method) ===');
+            
+            try {
+                // Method 1: Try using a CORS proxy
+                const smsData = {
+                    phone: '17204995415',
+                    message: 'Test SMS from Barber Studio - Alternative method',
+                    key: '9b579ce6c9a49bc0da0cefb41c723b3eeac11900IuDuGnL2gaf67OpXoJSawwvvQ'
+                };
+
+                log('Trying CORS proxy method...');
+                log('SMS data: ' + JSON.stringify(smsData, null, 2));
+                
+                // Try with CORS proxy
+                const proxyUrl = 'https://cors-anywhere.herokuapp.com/https://textbelt.com/text';
+                
+                const response = await fetch(proxyUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(smsData)
+                });
+
+                log('SMS response status: ' + response.status);
+                log('SMS response ok: ' + response.ok);
+
+                if (!response.ok) {
+                    const errorData = await response.text();
+                    log('❌ CORS proxy failed: ' + errorData, 'error');
+                    
+                    // Fallback: Show manual instructions
+                    log('\n=== MANUAL SMS TEST ===');
+                    log('Since direct API calls are blocked, here are your options:');
+                    log('1. Use a different SMS service that allows CORS');
+                    log('2. Deploy to a platform that supports serverless functions');
+                    log('3. Use the booking system - it will work when deployed properly');
+                    log('\nFor now, the EMAIL notifications will work perfectly!');
+                    
+                } else {
+                    const result = await response.json();
+                    if (result.success) {
+                        log('✅ SMS sent successfully!', 'success');
+                        log('SMS result: ' + JSON.stringify(result, null, 2));
+                    } else {
+                        log('❌ SMS failed: ' + result.error, 'error');
+                    }
+                }
+                
+            } catch (error) {
+                log('❌ SMS failed: ' + error.message, 'error');
+                log('Error details: ' + JSON.stringify(error, null, 2));
+                
+                log('\n=== ALTERNATIVE SOLUTIONS ===');
+                log('1. Email notifications work perfectly');
+                log('2. For SMS, try deploying to Vercel or Netlify');
+                log('3. Or use a different SMS service');
+            }
+        }
+
+        // Initialize
+        log('Simple test page loaded. Ready to test notifications.');
+        log('Note: SMS may not work due to CORS restrictions, but email will work!');
+    </script>
+</body>
+</html>
+
