@@ -6,7 +6,7 @@
   "scripts": {
     "build": "echo 'No build process needed for static site'",
     "dev": "echo 'Open index.html in browser'",
-    "deploy": "echo 'Deploy to Netlify'"
+    "deploy": "echo 'Deploy to Vercel'"
   },
   "dependencies": {
     "node-fetch": "^2.6.7"
