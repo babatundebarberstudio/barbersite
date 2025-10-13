@@ -323,6 +323,9 @@
         <div class="admin-header">
             <h1><i class="fas fa-crown"></i> Admin Panel</h1>
             <p>Babatunde's Barber Studio - Manage Your Availability</p>
+            <button onclick="exportData()" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 15px;">
+                <i class="fas fa-download"></i> Export Data for Booking Manager
+            </button>
         </div>
 
         <div class="admin-section">
@@ -533,6 +536,28 @@
             setTimeout(() => {
                 notification.remove();
             }, 5000);
+        }
+
+        // Export data for booking manager
+        function exportData() {
+            const bookings = localStorage.getItem('babatundeBarberBookings') || '[]';
+            const schedule = localStorage.getItem('babatundeBarberSchedule') || '{}';
+            
+            const exportData = {
+                bookings: JSON.parse(bookings),
+                schedule: JSON.parse(schedule),
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `barbershop-data-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            alert('Data exported successfully! Download the file and import it into your Booking Manager.');
         }
 
         // Initialize the admin panel

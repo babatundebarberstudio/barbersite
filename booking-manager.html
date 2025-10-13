@@ -38,6 +38,43 @@
             font-size: 1.1rem;
         }
         
+        .sync-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .sync-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .sync-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+        
+        .sync-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .sync-btn.export {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .sync-btn.import {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        }
+        
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -309,6 +346,23 @@
             <p>Manage all customer bookings and availability</p>
         </div>
         
+        <!-- Data Sync Section -->
+        <div class="sync-section">
+            <h3><i class="fas fa-sync-alt"></i> Sync with Live Website</h3>
+            <p>Export data from your live website and import it here to keep everything in sync.</p>
+            <div class="sync-buttons">
+                <button class="sync-btn export" onclick="exportData()">
+                    <i class="fas fa-download"></i> Export Current Data
+                </button>
+                <button class="sync-btn import" onclick="importData()">
+                    <i class="fas fa-upload"></i> Import Live Data
+                </button>
+                <button class="sync-btn" onclick="clearAllData()">
+                    <i class="fas fa-trash"></i> Clear All Data
+                </button>
+            </div>
+        </div>
+        
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number" id="total-bookings">0</div>
@@ -360,6 +414,75 @@
             
             updateStats();
             displayBookings();
+        }
+        
+        // Export all data (bookings + schedule)
+        function exportData() {
+            const bookings = localStorage.getItem('babatundeBarberBookings') || '[]';
+            const schedule = localStorage.getItem('babatundeBarberSchedule') || '{}';
+            
+            const exportData = {
+                bookings: JSON.parse(bookings),
+                schedule: JSON.parse(schedule),
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `barbershop-data-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            alert('Data exported successfully!');
+        }
+        
+        // Import data from live website
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        if (data.bookings) {
+                            localStorage.setItem('babatundeBarberBookings', JSON.stringify(data.bookings));
+                        }
+                        
+                        if (data.schedule) {
+                            localStorage.setItem('babatundeBarberSchedule', JSON.stringify(data.schedule));
+                        }
+                        
+                        loadBookings();
+                        alert('Data imported successfully!');
+                    } catch (error) {
+                        alert('Error importing data: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+        
+        // Clear all data
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear ALL data? This cannot be undone!')) {
+                localStorage.removeItem('babatundeBarberBookings');
+                localStorage.removeItem('babatundeBarberSchedule');
+                allBookings = [];
+                displayBookings();
+                updateStats();
+                alert('All data cleared!');
+            }
         }
         
         // Update statistics
@@ -529,9 +652,10 @@
             showNotification(`Booking ${confirmationNumber} has been cancelled and the time slot is now available again.`, 'success');
         }
         
-        // Add time slot back to schedule
-        function addTimeSlotBackToSchedule(date, time) {
-            const dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+         // Add time slot back to schedule
+         function addTimeSlotBackToSchedule(date, time) {
+             // Fix timezone issue: append time to ensure correct date parsing
+             const dayName = new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
             
             // Load current schedule
             const storedSchedule = localStorage.getItem('babatundeBarberSchedule');

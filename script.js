@@ -386,7 +386,8 @@ function updateAvailabilityDisplay() {
         return;
     }
     
-    const selectedDate = new Date(dateInput.value);
+    // Fix timezone issue: append time to ensure correct date parsing
+    const selectedDate = new Date(dateInput.value + 'T12:00:00');
     const dayName = selectedDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     console.log('Selected date:', dateInput.value, 'Day name:', dayName);
     
@@ -564,7 +565,8 @@ function saveBookingToStorage(bookingData, confirmationNumber) {
 
 // Remove time slot from schedule
 function removeTimeSlotFromSchedule(date, time) {
-    const dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    // Fix timezone issue: append time to ensure correct date parsing
+    const dayName = new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     
     // Load current schedule
     const storedSchedule = localStorage.getItem('babatundeBarberSchedule');
@@ -671,7 +673,7 @@ async function handleBookingSubmission(e) {
         nextStep();
         
         // Show success notification
-        showNotification('Booking confirmed! Check your email for details.', 'success');
+        showNotification('Booking confirmed! Check your email for location & directions.', 'success');
         
     } catch (error) {
         console.error('Error processing booking:', error);
@@ -773,7 +775,7 @@ function generateConfirmationNumber() {
 function sendBookingNotifications(bookingDetails, confirmationNumber, totalPrice) {
     // Email notification to you
     const barberEmail = {
-        to: 'matthewswondwesen1@gmail.com',
+        to: 'babatundesbarberstudio@gmail.com',
         subject: `New Booking - ${bookingDetails.customerInfo.name}`,
         body: generateEmailContent(bookingDetails, confirmationNumber, totalPrice, 'barber')
     };
@@ -1038,13 +1040,13 @@ async function sendBookingEmails(bookingData, confirmationNumber) {
     // Prepare template parameters for barber email
     const barberTemplateParams = {
         // Try all common recipient parameter names
-        to_email: 'matthewswondwesen1@gmail.com',
-        email: 'matthewswondwesen1@gmail.com',
-        to: 'matthewswondwesen1@gmail.com',
-        user_email: 'matthewswondwesen1@gmail.com',
-        recipient_email: 'matthewswondwesen1@gmail.com',
-        reply_to: 'matthewswondwesen1@gmail.com',
-        recipient: 'matthewswondwesen1@gmail.com',
+        to_email: 'babatundesbarberstudio@gmail.com',
+        email: 'babatundesbarberstudio@gmail.com',
+        to: 'babatundesbarberstudio@gmail.com',
+        user_email: 'babatundesbarberstudio@gmail.com',
+        recipient_email: 'babatundesbarberstudio@gmail.com',
+        reply_to: 'babatundesbarberstudio@gmail.com',
+        recipient: 'babatundesbarberstudio@gmail.com',
         // Other parameters
         to_name: 'Babatunde',
         customer_name: bookingData.customerInfo.name,

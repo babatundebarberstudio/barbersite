@@ -137,17 +137,21 @@
             <!-- Step 1: Service Selection -->
             <div id="step-1" class="booking-step active">
                 <h2>Choose Your Service</h2>
+                <div class="step-navigation" style="margin-bottom: 20px;">
+                    <button type="button" class="btn-next" onclick="nextStep()" disabled>Next: Additional Services</button>
+                </div>
                 <div class="services-grid-modal">
                     <!-- Services will be populated by JavaScript -->
-                </div>
-                <div class="step-navigation">
-                    <button type="button" class="btn-next" onclick="nextStep()" disabled>Next: Additional Services</button>
                 </div>
             </div>
 
             <!-- Step 2: Additional Services -->
             <div id="step-2" class="booking-step">
                 <h2>Additional Services</h2>
+                <div class="step-navigation" style="margin-bottom: 20px;">
+                    <button type="button" class="btn-back" onclick="prevStep()">Back: Choose Service</button>
+                    <button type="button" class="btn-next" onclick="nextStep()">Next: Select Time</button>
+                </div>
                 <div class="additional-services">
                     <div class="service-option">
                         <input type="checkbox" id="beard-lineup" name="additional" value="beard-lineup">
@@ -206,16 +210,15 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="step-navigation">
-                    <button type="button" class="btn-back" onclick="prevStep()">Back: Choose Service</button>
-                    <button type="button" class="btn-next" onclick="nextStep()">Next: Select Time</button>
-                </div>
             </div>
 
             <!-- Step 3: Availability -->
             <div id="step-3" class="booking-step">
                 <h2>Select Date & Time</h2>
+                <div class="step-navigation" style="margin-bottom: 20px;">
+                    <button type="button" class="btn-back" onclick="prevStep()">Back: Additional Services</button>
+                    <button type="button" class="btn-next" onclick="nextStep()" disabled>Next: Your Information</button>
+                </div>
                 <div class="availability-section">
                     <div class="form-group">
                         <label for="date">Select Date</label>
@@ -228,15 +231,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="step-navigation">
-                    <button type="button" class="btn-back" onclick="prevStep()">Back: Additional Services</button>
-                    <button type="button" class="btn-next" onclick="nextStep()" disabled>Next: Your Information</button>
-                </div>
             </div>
 
             <!-- Step 4: Customer Information -->
             <div id="step-4" class="booking-step">
                 <h2>Your Information</h2>
+                <!-- Navigation buttons at top for mobile accessibility -->
+                <div class="step-navigation" style="margin-bottom: 20px;">
+                    <button type="button" class="btn-back" onclick="prevStep()">Back: Select Time</button>
+                    <button type="submit" class="submit-btn" form="booking-form">Complete Booking</button>
+                </div>
                 <form id="booking-form">
                     <div class="form-group">
                         <label for="name">Full Name</label>
@@ -258,10 +262,6 @@
                     <div class="form-group">
                         <label for="notes">Special Requests (Optional)</label>
                         <textarea id="notes" name="notes" rows="3"></textarea>
-                    </div>
-                    <div class="step-navigation">
-                        <button type="button" class="btn-back" onclick="prevStep()">Back: Select Time</button>
-                        <button type="submit" class="submit-btn">Complete Booking</button>
                     </div>
                 </form>
             </div>
@@ -314,6 +314,22 @@
                             <span id="summary-phone"></span>
                         </div>
                     </div>
+                </div>
+                
+                <div class="email-reminder" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; margin: 20px 0; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="fas fa-envelope" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <h3 style="margin: 10px 0; font-size: 1.3rem;">📧 Check Your Email!</h3>
+                    <p style="margin: 10px 0; font-size: 1rem; line-height: 1.6;">
+                        A confirmation email has been sent with:
+                    </p>
+                    <ul style="list-style: none; padding: 0; margin: 10px 0; font-size: 0.95rem;">
+                        <li style="margin: 8px 0;">📍 <strong>Location & Directions</strong></li>
+                        <li style="margin: 8px 0;">🗺️ <strong>How to Find Us</strong></li>
+                        <li style="margin: 8px 0;">📋 <strong>Your Appointment Details</strong></li>
+                    </ul>
+                    <p style="margin: 10px 0; font-size: 0.9rem; opacity: 0.9;">
+                        Please check your inbox (and spam folder) for complete information.
+                    </p>
                 </div>
                 
                 <div class="confirmation-actions">
