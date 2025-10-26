@@ -430,7 +430,20 @@ function selectTimeSlot(element, time) {
     element.classList.add('selected');
     selectedTime = time;
     bookingData.time = time;
-    bookingData.date = document.getElementById('date').value;
+    
+    // Fix timezone issue: ensure we use the same date parsing method as updateAvailabilityDisplay
+    const dateInputValue = document.getElementById('date').value;
+    console.log('=== DATE DEBUG IN selectTimeSlot ===');
+    console.log('Raw date input value:', dateInputValue);
+    
+    const selectedDate = new Date(dateInputValue + 'T12:00:00');
+    console.log('Selected date object:', selectedDate);
+    console.log('Selected date ISO string:', selectedDate.toISOString());
+    console.log('Selected date YYYY-MM-DD:', selectedDate.toISOString().split('T')[0]);
+    
+    bookingData.date = selectedDate.toISOString().split('T')[0]; // Store as YYYY-MM-DD format
+    console.log('Final bookingData.date:', bookingData.date);
+    console.log('=== END DATE DEBUG ===');
     
     // Enable next button
     document.querySelector('#step-3 .btn-next').disabled = false;
@@ -551,6 +564,11 @@ function saveBookingToStorage(bookingData, confirmationNumber) {
         bookingDate: new Date().toISOString()
     };
     
+    console.log('=== SAVE BOOKING DEBUG ===');
+    console.log('Booking object being saved:', booking);
+    console.log('Booking date field:', booking.date);
+    console.log('=== END SAVE BOOKING DEBUG ===');
+    
     // Load existing bookings
     const existingBookings = JSON.parse(localStorage.getItem('babatundeBarberBookings') || '[]');
     
@@ -565,7 +583,7 @@ function saveBookingToStorage(bookingData, confirmationNumber) {
 
 // Remove time slot from schedule
 function removeTimeSlotFromSchedule(date, time) {
-    // Fix timezone issue: append time to ensure correct date parsing
+    // Fix timezone issue: ensure consistent date parsing
     const dayName = new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     
     // Load current schedule
@@ -658,6 +676,13 @@ async function handleBookingSubmission(e) {
         const confirmationNumber = 'BB' + Date.now().toString().slice(-6);
         console.log('Generated confirmation number:', confirmationNumber);
         
+        // Debug booking data before saving
+        console.log('=== BOOKING SUBMISSION DEBUG ===');
+        console.log('Complete bookingData:', bookingData);
+        console.log('bookingData.date:', bookingData.date);
+        console.log('bookingData.time:', bookingData.time);
+        console.log('=== END BOOKING SUBMISSION DEBUG ===');
+        
         // Save booking to localStorage
         saveBookingToStorage(bookingData, confirmationNumber);
         
@@ -709,7 +734,8 @@ function showConfirmation() {
     
     // Populate the existing HTML elements
     document.getElementById('confirmation-number').textContent = confirmationNumber;
-    document.getElementById('summary-date').textContent = formatDate(new Date(bookingData.date));
+    // Fix timezone issue: use same parsing method as other functions
+    document.getElementById('summary-date').textContent = formatDate(new Date(bookingData.date + 'T12:00:00'));
     document.getElementById('summary-time').textContent = formatTime(bookingData.time);
     document.getElementById('summary-service').textContent = `${service.name} - $${service.price}.00`;
     document.getElementById('summary-additional').textContent = additionalServicesText;
@@ -818,7 +844,7 @@ Email: ${bookingDetails.customerInfo.email}
 Phone: ${bookingDetails.customerInfo.phone}
 
 Appointment Details:
-Date: ${formatDate(new Date(bookingDetails.date))}
+Date: ${formatDate(new Date(bookingDetails.date + 'T12:00:00'))}
 Time: ${formatTime(bookingDetails.time)}
 Main Service: ${service.name}
 
@@ -849,7 +875,7 @@ Phone: ${bookingDetails.customerInfo.phone}
 Email: ${bookingDetails.customerInfo.email}
 
 APPOINTMENT DETAILS:
-📅 Date: ${formatDate(new Date(bookingDetails.date))}
+📅 Date: ${formatDate(new Date(bookingDetails.date + 'T12:00:00'))}
 🕐 Time: ${formatTime(bookingDetails.time)}
 ✂️ Service: ${service.name}
 
@@ -1017,7 +1043,7 @@ async function sendBookingEmails(bookingData, confirmationNumber) {
         to_name: bookingData.customerInfo.name,
         customer_name: bookingData.customerInfo.name,
         confirmation_number: confirmationNumber,
-        appointment_date: formatDate(new Date(bookingData.date)),
+        appointment_date: formatDate(new Date(bookingData.date + 'T12:00:00')),
         appointment_time: formatTime(bookingData.time),
         service_name: service.name,
         service_price: service.price,
@@ -1051,7 +1077,7 @@ async function sendBookingEmails(bookingData, confirmationNumber) {
         to_name: 'Babatunde',
         customer_name: bookingData.customerInfo.name,
         confirmation_number: confirmationNumber,
-        appointment_date: formatDate(new Date(bookingData.date)),
+        appointment_date: formatDate(new Date(bookingData.date + 'T12:00:00')),
         appointment_time: formatTime(bookingData.time),
         service_name: service.name,
         service_price: service.price,

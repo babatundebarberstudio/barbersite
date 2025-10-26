@@ -490,12 +490,12 @@
             const totalBookings = allBookings.length;
             const today = new Date().toDateString();
             const todayBookings = allBookings.filter(booking => 
-                new Date(booking.date).toDateString() === today
+                new Date(booking.date + 'T12:00:00').toDateString() === today
             ).length;
             
             const thisWeek = getWeekDates();
             const thisWeekBookings = allBookings.filter(booking => {
-                const bookingDate = new Date(booking.date);
+                const bookingDate = new Date(booking.date + 'T12:00:00');
                 return bookingDate >= thisWeek.start && bookingDate <= thisWeek.end;
             }).length;
             
@@ -542,13 +542,27 @@
             const sortedBookings = [...allBookings].sort((a, b) => new Date(b.date) - new Date(a.date));
             
             container.innerHTML = sortedBookings.map(booking => {
-                const bookingDate = new Date(booking.date);
+                console.log('=== BOOKING DISPLAY DEBUG ===');
+                console.log('Raw booking.date:', booking.date);
+                console.log('Booking object:', booking);
+                
+                // Fix timezone issue: use same parsing method as booking system
+                const bookingDate = new Date(booking.date + 'T12:00:00');
+                console.log('Parsed bookingDate:', bookingDate);
+                console.log('BookingDate toLocaleDateString:', bookingDate.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }));
+                
                 const formattedDate = bookingDate.toLocaleDateString('en-US', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                 });
+                console.log('=== END BOOKING DISPLAY DEBUG ===');
                 
                 const additionalServicesText = booking.additionalServices && booking.additionalServices.length > 0 
                     ? booking.additionalServices.map(service => {
@@ -654,7 +668,7 @@
         
          // Add time slot back to schedule
          function addTimeSlotBackToSchedule(date, time) {
-             // Fix timezone issue: append time to ensure correct date parsing
+             // Fix timezone issue: ensure consistent date parsing
              const dayName = new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
             
             // Load current schedule
