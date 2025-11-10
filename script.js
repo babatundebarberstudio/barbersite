@@ -372,6 +372,14 @@ window.nextStep = nextStep;
 window.prevStep = prevStep;
 
 // Availability System
+function isAtLeastTomorrow(date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return date >= tomorrow;
+}
+
 function updateAvailabilityDisplay() {
     const dateInput = document.getElementById('date');
     const availableTimesContainer = document.getElementById('available-times');
@@ -390,6 +398,19 @@ function updateAvailabilityDisplay() {
     const selectedDate = new Date(dateInput.value + 'T12:00:00');
     const dayName = selectedDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     console.log('Selected date:', dateInput.value, 'Day name:', dayName);
+
+    const normalizedSelectedDate = new Date(selectedDate);
+    normalizedSelectedDate.setHours(0, 0, 0, 0);
+    if (!isAtLeastTomorrow(normalizedSelectedDate)) {
+        availableTimesContainer.innerHTML = '<p class="availability-message">Same-day bookings are not available. Please select a future date.</p>';
+        const nextBtn = document.querySelector('#step-3 .btn-next');
+        if (nextBtn) {
+            nextBtn.disabled = true;
+        }
+        selectedTime = null;
+        bookingData.time = null;
+        return;
+    }
     
     const availableTimes = window.availabilitySchedule[dayName] || [];
     console.log('Available times for', dayName + ':', availableTimes);
@@ -446,7 +467,10 @@ function selectTimeSlot(element, time) {
     console.log('=== END DATE DEBUG ===');
     
     // Enable next button
-    document.querySelector('#step-3 .btn-next').disabled = false;
+    const nextBtn = document.querySelector('#step-3 .btn-next');
+    if (nextBtn) {
+        nextBtn.disabled = false;
+    }
 }
 
 function formatTime(timeString) {
@@ -519,8 +543,10 @@ function setupEventListeners() {
     if (dateInput) {
         dateInput.addEventListener('change', updateAvailabilityDisplay);
         // Set minimum date to tomorrow (advance booking requirement)
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
         dateInput.setAttribute('min', tomorrow.toISOString().split('T')[0]);
         
         console.log('Date input setup complete. Minimum date set to:', tomorrow.toISOString().split('T')[0]);
@@ -641,6 +667,13 @@ async function handleBookingSubmission(e) {
     if (!bookingData.service || !bookingData.time || !bookingData.date) {
         console.log('Missing booking data:', { service: bookingData.service, time: bookingData.time, date: bookingData.date });
         showNotification('Please complete all required steps', 'error');
+        return;
+    }
+
+    const bookingDateForValidation = new Date(bookingData.date + 'T00:00:00');
+    bookingDateForValidation.setHours(0, 0, 0, 0);
+    if (!isAtLeastTomorrow(bookingDateForValidation)) {
+        showNotification('Same-day bookings are not allowed. Please select a future date.', 'error');
         return;
     }
     
